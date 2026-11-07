@@ -24,7 +24,7 @@ body { font-family: JiceSans, -apple-system, BlinkMacSystemFont, 'PingFang SC', 
   align-items: center;
   min-height: 100vh;
   min-height: 100svh;
-  padding: 50px var(--gutter) 104px;
+  padding: 50px var(--gutter) 82px;
   overflow: hidden;
   overflow: clip;
 }
@@ -32,15 +32,19 @@ body { font-family: JiceSans, -apple-system, BlinkMacSystemFont, 'PingFang SC', 
 .scene__motion {
   position: absolute;
   inset: -3%;
-  transform: translate3d(var(--pointer-x, 0px), var(--pointer-y, 0px), 0);
+  animation: space-reveal 3.8s cubic-bezier(.18, .55, .28, 1) both;
 }
 .scene__picture {
   display: block;
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  animation: space-reveal 3.8s cubic-bezier(.18, .55, .28, 1) both;
 }
 .scene__picture img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.scene__canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; visibility: hidden; }
+.scene--live .scene__canvas { visibility: visible; }
+.scene--live .scene__picture { visibility: hidden; }
 .scene__shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(11 12 15 / .26), transparent 58%); }
 .identity { width: var(--identity-width); max-width: 100%; }
 .identity__name { margin: 0; line-height: 0; animation: identity-reveal 1.25s cubic-bezier(.2, .65, .3, 1) .16s both; }
@@ -48,32 +52,13 @@ body { font-family: JiceSans, -apple-system, BlinkMacSystemFont, 'PingFang SC', 
 .identity__description {
   margin: 6px 0 0;
   padding-inline: var(--identity-inset);
-  color: #b3ada1;
-  font-size: clamp(13px, 1.03vw, 17px);
   font-weight: 400;
   line-height: 1.8;
-  letter-spacing: .14em;
   white-space: nowrap;
   animation: description-reveal 1.4s ease .6s both;
 }
-.site-footer {
-  position: absolute;
-  z-index: 2;
-  inset: auto 0 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 24px;
-  padding: 24px calc(var(--gutter) + var(--identity-inset)) max(29px, env(safe-area-inset-bottom));
-  color: #aaa397;
-  font-size: 11px;
-  line-height: 1.6;
-  letter-spacing: .07em;
-  animation: description-reveal 1.4s ease 1s both;
-}
-.site-domain { letter-spacing: .055em; }
-.site-status { display: inline-flex; align-items: center; gap: 10px; }
-.status-dot { width: 3px; height: 3px; flex: none; border-radius: 50%; background: #c4af79; }
+.identity__purpose { display: block; color: #c6bfb2; font-size: clamp(15px, 1.27vw, 20px); letter-spacing: .12em; }
+.identity__category { display: block; margin-top: 8px; color: #9e978a; font-size: clamp(11px, .88vw, 14px); letter-spacing: .16em; }
 @keyframes space-reveal {
   from { opacity: .03; transform: translate3d(12px, 0, 0) scale(1.025); }
   38% { opacity: .38; }
@@ -90,20 +75,23 @@ body { font-family: JiceSans, -apple-system, BlinkMacSystemFont, 'PingFang SC', 
     align-items: flex-start;
     justify-content: center;
     padding-top: max(17.5svh, calc(env(safe-area-inset-top) + 58px));
-    padding-bottom: 104px;
+    padding-bottom: max(60px, env(safe-area-inset-bottom));
   }
   .scene__motion { inset: -1.5%; }
   .scene__shade { background: linear-gradient(180deg, rgb(11 12 15 / .08), transparent 48%, rgb(11 12 15 / .08)); }
-  .identity__description { margin-top: 9px; font-size: clamp(12px, 3.2vw, 15px); letter-spacing: .12em; }
-  .site-footer { padding-inline: calc((100vw - var(--identity-width)) / 2 + var(--identity-inset)); padding-bottom: max(27px, env(safe-area-inset-bottom)); font-size: 10px; }
+  .identity__description { margin-top: 9px; }
+  .identity__purpose { font-size: clamp(14px, 3.9vw, 18px); }
+  .identity__category { margin-top: 7px; font-size: clamp(10px, 2.9vw, 13px); letter-spacing: .12em; }
 }
 @media (max-height: 520px) and (orientation: landscape) {
   :root { --identity-width: clamp(260px, 34vw, 430px); }
-  .portal { padding-top: 22px; padding-bottom: 72px; }
-  .identity__description { font-size: 12px; margin-top: 0; }
-  .site-footer { padding-top: 15px; padding-bottom: max(18px, env(safe-area-inset-bottom)); font-size: 10px; }
+  .portal { padding-top: 22px; padding-bottom: 40px; }
+  .identity__description { margin-top: 0; }
+  .identity__purpose { font-size: 14px; }
+  .identity__category { margin-top: 4px; font-size: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .scene__motion { transform: none !important; }
+  .scene__canvas { display: none !important; }
+  .scene__picture { visibility: visible !important; }
 }
